@@ -6,8 +6,8 @@ from base import open_image
 def base_image(img):
     try:
         with open_image(img) as image:
-            im = image.convert("1")
-            print im.mode
+            image.convert("1")
+            print image.mode
     except Exception as e:
         print e
 
