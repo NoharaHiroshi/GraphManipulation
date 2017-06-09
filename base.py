@@ -8,8 +8,8 @@ from PIL import Image
 class NewImage:
     def __init__(self, file_name):
         self.base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        self.img_dir = os.path.join(self.base_dir, u'GraphManipulation\Images')
-        self.file_dir = os.path.join(self.img_dir, file_name)
+        self.img_file_dir = os.path.join(self.base_dir, u'GraphManipulation\Images')
+        self.file_dir = os.path.join(self.img_file_dir, file_name)
         self.im = Image.open(self.file_dir)
 
 
