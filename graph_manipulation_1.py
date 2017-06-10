@@ -3,6 +3,7 @@
 import os
 import re
 from base import open_image
+from PIL import Image
 
 
 # Check Picture Information
@@ -65,5 +66,38 @@ def create_thumbnail(img, rate=None, resize=None):
         print e
 
 
+# Operation Picture
+def operation_picture(img, r_size):
+    try:
+        with open_image(img) as image:
+            new_img = image.im.convert('RGBA')
+            m_width, m_height = [i//2 for i in new_img.size]
+            r_size //= 2
+            box = (m_width-r_size, m_height-r_size, m_width+r_size, m_height+r_size)
+            region = new_img.crop(box)
+            region = region.transpose(Image.ROTATE_180)
+            new_img.paste(region, box)
+            new_img.show()
+    except Exception as e:
+        print e
+
+
+# Split And Merge Channel
+def operation_channel(img):
+    try:
+        with open_image(img) as image:
+            new_img = image.im
+            if new_img.mode == 'RGB':
+                r, g, b = new_img.split()
+                change_image = Image.merge("GRB", (g, b, r))
+            elif new_img.mode == 'RGBA':
+                r, g, b, a = new_img.split()
+                change_image = Image.merge("GRBA", (g, b, r, a))
+            else:
+                change_image = new_img
+            change_image.show()
+    except Exception as e:
+        print e
+
 if __name__ == '__main__':
-    create_thumbnail(u'img.png', resize=(200, 200))
+    operation_channel(u'img.png')
