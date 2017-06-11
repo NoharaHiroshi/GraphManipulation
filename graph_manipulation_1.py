@@ -7,6 +7,7 @@ from PIL import Image
 
 
 # Check Picture Information
+# 输出图片属性
 def check_picture_image(img):
     try:
         with open_image(img) as image:
@@ -21,6 +22,7 @@ def check_picture_image(img):
 
 
 # Transition Picture format
+# 转换图片格式
 def transition_picture_format(img, img_type):
     try:
         with open_image(img) as image:
@@ -35,6 +37,7 @@ def transition_picture_format(img, img_type):
 
 
 # Create Thumbnail
+# 创建缩略图
 def create_thumbnail(img, rate=None, resize=None):
     status = u'success'
     try:
@@ -67,6 +70,7 @@ def create_thumbnail(img, rate=None, resize=None):
 
 
 # Operation Picture
+# 裁剪中心图像并旋转
 def operation_picture(img, r_size):
     try:
         with open_image(img) as image:
@@ -83,6 +87,7 @@ def operation_picture(img, r_size):
 
 
 # Split And Merge Channel
+# 分割通道并合并
 def operation_channel(img):
     try:
         with open_image(img) as image:
@@ -99,5 +104,48 @@ def operation_channel(img):
     except Exception as e:
         print e
 
+
+# Resize Picture
+# 图形几何变换
+def resize_picture(img, size):
+    status = u'success'
+    try:
+        with open_image(img) as image:
+            new_img = image.im
+            if isinstance(size, tuple):
+                new_img = new_img.resize(size)
+            else:
+                status = u'fail'
+            new_img.show()
+            print status
+    except Exception as e:
+        print e
+
+
+# Rotate Picture
+# 旋转图形
+def rotate_picture(img, angle):
+    try:
+        with open_image(img) as image:
+            new_img = image.im
+            new_img = new_img.rotate(angle)
+            new_img.show()
+    except Exception as e:
+        print e
+
+
+# Transpose Picture
+# 旋转图形（水平反转）
+def transpose_picture(img):
+    try:
+        with open_image(img) as image:
+            new_image = image.im
+            new_image = new_image.transpose(Image.FLIP_LEFT_RIGHT)
+            new_image = new_image.transpose(Image.ROTATE_90)
+            new_image = new_image.transpose(Image.ROTATE_180)
+            new_image.show()
+    except Exception as e:
+        print e
+
 if __name__ == '__main__':
-    operation_channel(u'img.png')
+    transpose_picture(u'img.png')
