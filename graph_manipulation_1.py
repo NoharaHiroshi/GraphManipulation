@@ -2,6 +2,7 @@
 
 import os
 import re
+import ImageFilter
 from base import open_image
 from PIL import Image
 
@@ -147,5 +148,18 @@ def transpose_picture(img):
     except Exception as e:
         print e
 
+
+# Use Filter
+# 使用滤波器
+def use_filter(img):
+    try:
+        with open_image(img) as image:
+            new_img = image.im
+            # 模糊
+            new_img = new_img.filter(ImageFilter.BLUR)
+            new_img.show()
+    except Exception as e:
+        print e
+
 if __name__ == '__main__':
-    transpose_picture(u'img.png')
+    use_filter(u'img.png')
