@@ -12,8 +12,8 @@ from PIL import Image
 '''
 
 
-# 获取图片主体
-def get_main_image(img, value):
+# 获取图片主体(横)
+def get_row_main_image(img, value):
     try:
         width, height = img.size
         r, g, b = img.split()
@@ -45,6 +45,45 @@ def get_main_image(img, value):
         return alpha
     except Exception as e:
         print e
+
+
+# 获取图片主体(纵)
+def get_col_main_image(alpha, value):
+    try:
+        width, height = alpha.size
+        main_alpha = alpha.getdata()
+        first_p = main_alpha[0]
+        for w in range(width):
+            start = 0
+            end = 0
+            for h in range(height):
+                pixel = alpha.getpixel((w, h))
+                if pixel < first_p - value:
+                    start = h
+                    break
+            for _h in range(height)[::-1]:
+                pixel = alpha.getpixel((w, _h))
+                if pixel < first_p - value:
+                    end = _h
+                    break
+            pixel_start_list = range(0, start)
+            pixel_end_list = range(end, height)
+            pixel_list = range(start, end)
+            for p in pixel_start_list:
+                alpha.putpixel((w, p), 0)
+            for p in pixel_end_list:
+                alpha.putpixel((w, p), 0)
+            for p in pixel_list:
+                alpha.putpixel((w, p), 255)
+        return alpha
+    except Exception as e:
+        print e
+
+
+def get_main_image(img, value):
+    alpha = get_row_main_image(img, value)
+    # alpha = get_col_main_image(alpha, value)
+    return alpha
 
 
 # 测试简单白底图片转换为透明
