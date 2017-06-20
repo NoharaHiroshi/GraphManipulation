@@ -41,48 +41,41 @@ def get_row_main_image(img, value):
             for p in pixel_end_list:
                 alpha.putpixel((p, h), 0)
             for p in pixel_list:
-                alpha.putpixel((p, h), 255)
-        return alpha
+                pixel = alpha.getpixel((p, h))
+                alpha.putpixel((p, h), 255+value-pixel)
+        return alpha, 255-first_p, value
     except Exception as e:
         print e
 
 
 # 获取图片主体(纵)
-def get_col_main_image(alpha, value):
+def get_col_main_image(alpha, first_p, value):
     try:
         width, height = alpha.size
-        main_alpha = alpha.getdata()
-        first_p = main_alpha[0]
         for w in range(width):
             start = 0
             end = 0
             for h in range(height):
                 pixel = alpha.getpixel((w, h))
-                if pixel < first_p - value:
+                if first_p < pixel < first_p + value:
                     start = h
                     break
             for _h in range(height)[::-1]:
                 pixel = alpha.getpixel((w, _h))
-                if pixel < first_p - value:
+                if first_p < pixel < first_p + value:
                     end = _h
                     break
-            pixel_start_list = range(0, start)
-            pixel_end_list = range(end, height)
             pixel_list = range(start, end)
-            for p in pixel_start_list:
-                alpha.putpixel((w, p), 0)
-            for p in pixel_end_list:
-                alpha.putpixel((w, p), 0)
             for p in pixel_list:
-                alpha.putpixel((w, p), 255)
+                alpha.putpixel((w, p), 0)
         return alpha
     except Exception as e:
         print e
 
 
 def get_main_image(img, value):
-    alpha = get_row_main_image(img, value)
-    # alpha = get_col_main_image(alpha, value)
+    alpha, first_p, value = get_row_main_image(img, value)
+    alpha = get_col_main_image(alpha, first_p, value)
     return alpha
 
 
@@ -90,7 +83,7 @@ def get_main_image(img, value):
 def convert_trans_pic(img):
     try:
         with open_image(img) as image:
-            new_img = image.im.resize((500, 431))
+            new_img = image.im
             if new_img.mode == 'RGB':
                 r, g, b = new_img.split()
                 a = get_main_image(new_img, 40)
