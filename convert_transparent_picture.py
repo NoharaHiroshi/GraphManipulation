@@ -112,4 +112,4 @@ def convert_trans_pic(img):
         print e
 
 if __name__ == '__main__':
-    convert_trans_pic('goods.jpg')
+    convert_trans_pic('kele.jpg')

@@ -2,7 +2,9 @@
 
 import contextlib
 import datetime
-from sqlalchemy import create_engine
+import time
+import random
+from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import Column, DateTime, text
 from sqlalchemy.ext.declarative import declarative_base
@@ -24,14 +26,14 @@ cookie = 'EGG_SESS=e6hqBJuT__uHyIYJpkwc761g_WS8J_ECmGvD25nL3K0I5KwtfjOcIcVA6-uWX
          ' u=304428; isg=AsrKoy-Kp09dECug_1LX1X-rG7CsE3YUo0Qb81QDdp2oB2rBPEueJRBxY0Yh'
 
 database_name = 'icon_font_source'
-database_user = 'Lands'
+database_user = 'root'
 database_password = 'My#*07**4##'
 database_host = '47.92.34.124'
-database_src = 'mysql://%s:%s@%s/%s?charset=utf8' % (database_name, database_password, database_host, database_name)
+database_src = 'mysql://%s:%s@%s/%s?charset=utf8' % (database_user, database_password, database_host, database_name)
 
 engine = create_engine(
     database_src,
-    echo=True,
+    echo=False,
     pool_recycle=3600,
     pool_size=5
 )
@@ -58,3 +60,10 @@ class TBase(object):
     modified_date = Column(DateTime, default=datetime.datetime.now, onupdate=text('current_timestamp'))
 
 Base = declarative_base(cls=TBase)
+
+
+def id_generate():
+    part_date = str(time.time())[:10]
+    part_random = str(random.random())[-6:]
+    u_id = int(''.join([part_date, part_random]))
+    return u_id

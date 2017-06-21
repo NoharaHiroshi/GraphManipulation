@@ -1,18 +1,17 @@
 # coding=utf-8
 
 import json
-
 import requests
-
 from ImagesSource.IconFont.base import *
+from ImagesSource.IconFont.Model.icon_data import IconData
 
 
 class IconFontSource:
-    def __init__(self):
+    def __init__(self, page):
         self.index_json_url = r'http://www.iconfont.cn/api/collections.json'
         self.params = {
             'type': 3,
-            'page': 1,
+            'page': page,
             'ctoken': 'mEKnXovYB9Ti5P5Z8Pbyicon-font'
         }
         self.headers = {
@@ -42,7 +41,47 @@ class IconFontSource:
                 if count:
                     data_list = data.get('lists', None)
                     for data_info in data_list:
-                        print data_info
+                        author = data_info.get('create_user_id', None)
+                        desc = data_info.get('description', None)
+                        series_name = data_info.get('name', None)
+                        series_id = data_info.get('id', None)
+                        slug = data_info.get('slug', None)
+                        icons = data_info.get('icons', None)
+                        if icons:
+                            with get_session() as db_session:
+                                for info in icons:
+                                    svg = info.get('show_svg', None)
+                                    width = info.get('width', None)
+                                    height = info.get('height', None)
+                                    name = info.get('name', None)
+                                    if svg:
+                                        icon = IconData()
+                                        icon.author = author
+                                        icon.svg = svg
+                                        icon.height = height
+                                        icon.width = width
+                                        icon.name = name
+                                        icon.series_name = series_name
+                                        icon.series_id = series_id
+                                        icon.slug = slug
+                                        icon.desc = desc
+                                        db_session.add(icon)
+                                db_session.commit()
+                        else:
+                            result.update({
+                                'response': 'fail',
+                                'info': 'can not get icons'
+                            })
+                else:
+                    result.update({
+                        'response': 'fail',
+                        'info': 'count is zero'
+                    })
+            else:
+                result.update({
+                    'response': 'fail',
+                    'info': 'can not get data'
+                })
         except requests.exceptions.ConnectTimeout:
             result.update({
                 'response': 'fail',
@@ -57,5 +96,7 @@ class IconFontSource:
             return result
 
 if __name__ == '__main__':
-    source = IconFontSource()
-    source.get_index_info()
+    for page in range(1, 144):
+        print '当前页数: %s' % page
+        source = IconFontSource(page)
+        source.get_index_info()
