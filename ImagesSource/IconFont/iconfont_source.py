@@ -1,11 +1,10 @@
 # coding=utf-8
 
-import requests
 import json
-import sqlalchemy
-from bs4 import BeautifulSoup as bs
-from ImagesSource.session import get_session
-from ImagesSource.base import *
+
+import requests
+
+from ImagesSource.IconFont.base import *
 
 
 class IconFontSource:

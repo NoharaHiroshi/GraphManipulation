@@ -1,8 +1,11 @@
 # coding=utf-8
 
 import contextlib
+import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import Column, DateTime, text
+from sqlalchemy.ext.declarative import declarative_base
 
 cookie = 'EGG_SESS=e6hqBJuT__uHyIYJpkwc761g_WS8J_ECmGvD25nL3K0I5KwtfjOcIcVA6-uWX3R9iSMnxkNhYqp4O0i90NFqZNhy6ACyV3iY' \
          'Y3AR0Eu0ylIIa_PmQ46C88vmgnxy6DANGyE_nmOlA2G1bouqd9v3GgXFssTggBlTaUhoThL1GMuBKSh8D-16bmAPDG5elF4HuhSyHTQN2Y' \
@@ -37,7 +40,7 @@ Session = sessionmaker(bind=engine, autocommit=True)
 
 
 @contextlib.contextmanager
-def get_session(auto_commit=False, project_id=None):
+def get_session(auto_commit=False):
     session = Session(autocommit=auto_commit)
     try:
         yield session
@@ -48,3 +51,10 @@ def get_session(auto_commit=False, project_id=None):
         raise
     finally:
         session.close()
+
+
+class TBase(object):
+    created_date = Column(DateTime, default=datetime.datetime.now)
+    modified_date = Column(DateTime, default=datetime.datetime.now, onupdate=text('current_timestamp'))
+
+Base = declarative_base(cls=TBase)
