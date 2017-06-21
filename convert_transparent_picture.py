@@ -103,7 +103,7 @@ def convert_trans_pic(img):
             new_img = image.im
             if new_img.mode == 'RGB':
                 r, g, b = new_img.split()
-                a = get_main_image(new_img, 40)
+                a = get_main_image(new_img, 20)
                 a_img = Image.merge('RGBA', (r, g, b, a))
                 a_img.save('test.png')
             else:
@@ -112,4 +112,4 @@ def convert_trans_pic(img):
         print e
 
 if __name__ == '__main__':
-    convert_trans_pic('flower_1.jpg')
+    convert_trans_pic('goods.jpg')
