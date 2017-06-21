@@ -106,8 +106,10 @@ def convert_trans_pic(img):
                 a = get_main_image(new_img, 40)
                 a_img = Image.merge('RGBA', (r, g, b, a))
                 a_img.save('test.png')
+            else:
+                print 'not RGB mode'
     except Exception as e:
         print e
 
 if __name__ == '__main__':
-    convert_trans_pic('leaf_2.jpg')
+    convert_trans_pic('flower_1.jpg')
