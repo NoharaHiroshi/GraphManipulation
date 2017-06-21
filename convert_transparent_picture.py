@@ -4,7 +4,7 @@ import os
 import re
 import ImageFilter
 import ImageEnhance
-from base import open_image
+from base import open_image, calculate_by_time
 from PIL import Image
 
 '''
@@ -41,41 +41,58 @@ def get_row_main_image(img, value):
             for p in pixel_end_list:
                 alpha.putpixel((p, h), 0)
             for p in pixel_list:
-                pixel = alpha.getpixel((p, h))
-                alpha.putpixel((p, h), 255+value-pixel)
-        return alpha, 255-first_p, value
+                alpha.putpixel((p, h), 255)
+        return alpha
     except Exception as e:
         print e
 
 
 # 获取图片主体(纵)
-def get_col_main_image(alpha, first_p, value):
+def get_col_main_image(img, value):
     try:
-        width, height = alpha.size
+        width, height = img.size
+        r, g, b = img.split()
+        alpha = b
+        main_alpha = alpha.getdata()
+        first_p = main_alpha[0]
         for w in range(width):
             start = 0
             end = 0
             for h in range(height):
                 pixel = alpha.getpixel((w, h))
-                if first_p < pixel < first_p + value:
+                if pixel < first_p - value:
                     start = h
                     break
             for _h in range(height)[::-1]:
                 pixel = alpha.getpixel((w, _h))
-                if first_p < pixel < first_p + value:
+                if pixel < first_p - value:
                     end = _h
                     break
+            pixel_start_list = range(0, start)
+            pixel_end_list = range(end, height)
             pixel_list = range(start, end)
-            for p in pixel_list:
+            for p in pixel_start_list:
                 alpha.putpixel((w, p), 0)
+            for p in pixel_end_list:
+                alpha.putpixel((w, p), 0)
+            for p in pixel_list:
+                alpha.putpixel((w, p), 255)
         return alpha
     except Exception as e:
         print e
 
 
 def get_main_image(img, value):
-    alpha, first_p, value = get_row_main_image(img, value)
-    alpha = get_col_main_image(alpha, first_p, value)
+    row_alpha = get_row_main_image(img, value)
+    col_alpha = get_col_main_image(img, value)
+    width, height = img.size
+    for h in range(height):
+        for w in range(width):
+            row_pixel = row_alpha.getpixel((w, h))
+            col_pixel = col_alpha.getpixel((w, h))
+            if row_pixel != col_pixel:
+                col_alpha.putpixel((w, h), 0)
+    alpha = col_alpha
     return alpha
 
 

@@ -2,6 +2,7 @@
 
 import os
 import contextlib
+import datetime
 from PIL import Image
 
 
@@ -25,3 +26,13 @@ def open_image(file_name):
 
 if __name__ == '__main__':
     pass
+
+
+def calculate_by_time(func):
+    def wrapper(*args, **kwargs):
+        begin = datetime.datetime.now()
+        func(*args, **kwargs)
+        end = datetime.datetime.now()
+        time = end - begin
+        print u'运行时间：%s s' % time
+    return wrapper
