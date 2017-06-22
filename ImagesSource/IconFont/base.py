@@ -27,8 +27,8 @@ cookie = 'EGG_SESS=e6hqBJuT__uHyIYJpkwc761g_WS8J_ECmGvD25nL3K0I5KwtfjOcIcVA6-uWX
 
 database_name = 'icon_font_source'
 database_user = 'root'
-database_password = 'My#*07**4##'
-database_host = '47.92.34.124'
+database_password = '123456'
+database_host = 'localhost'
 database_src = 'mysql://%s:%s@%s/%s?charset=utf8' % (database_user, database_password, database_host, database_name)
 
 engine = create_engine(
