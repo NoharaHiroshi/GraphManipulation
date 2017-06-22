@@ -106,7 +106,4 @@ def store_icon(info, author, desc, series_name, series_id, slug):
         print e
 
 if __name__ == '__main__':
-    for page in range(1, 114):
-        print '当前页数: %s' % page
-        source = IconFontSource(page)
-        source.get_index_info()
+    pass
